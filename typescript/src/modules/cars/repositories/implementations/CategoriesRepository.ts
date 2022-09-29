@@ -1,15 +1,30 @@
-import { Category } from "../model/Category";
+import { Category } from "../../model/Category";
 import {
   ICategoriesRepository,
   ICreateCategoryDTO,
-} from "./ICategoriesRepository";
+} from "../ICategoriesRepository";
 
 class CategoriesRepository implements ICategoriesRepository {
   private categories: Category[];
 
+  // SINGLETON - Padrão usado para fazer a classe retornar uma única instância de si mesma
+
+  private static INSTANCE: CategoriesRepository;
+
   // constructor é um método q é chamado quando a classe é instaciada
-  constructor() {
+  private constructor() {
     this.categories = [];
+  }
+
+  // getInstance() - Método que vai verificar se a classe já foi instanciada, caso
+  // já tenha sido instaciada será usada a instância já existente
+
+  public static getInstance(): CategoriesRepository {
+    if (!CategoriesRepository.INSTANCE) {
+      CategoriesRepository.INSTANCE = new CategoriesRepository();
+    }
+
+    return CategoriesRepository.INSTANCE;
   }
 
   create({ name, description }: ICreateCategoryDTO): void {
